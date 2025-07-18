@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive live global billionaire density map showing real-time updates of billionaire distribution across countries worldwide.">
+    <meta name="keywords" content="billionaire, wealth, global, map, density, interactive, live, statistics, visualization">
+    <meta name="author" content="Your Blog Name">
+    
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    <meta property="og:title" content="Live Global Billionaire Density Map - Interactive Visualization">
+    <meta property="og:description" content="Explore the real-time distribution of billionaires across the globe with this interactive density map featuring live updates and detailed statistics.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourblog.blogspot.com/your-post-url">
+    <meta property="og:image" content="https://yourblog.blogspot.com/path-to-preview-image.jpg">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Live Global Billionaire Density Map">
+    <meta name="twitter:description" content="Interactive visualization of global billionaire distribution with real-time updates">
+    <meta name="twitter:image" content="https://yourblog.blogspot.com/path-to-preview-image.jpg">
+    
+    <title>🌍 Live Global Billionaire Density Map - Interactive Visualization</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Performance and SEO optimizations -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <style>
+        .container {
+            max-width: 600px;
+            height: 600px;
+            margin: 0 auto;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 140, 140, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f1419 75%, #000000 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            color: white !important;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.15), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 107, 107, 0.1), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.1), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255, 140, 140, 0.05), transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.1), transparent);
+            z-index: -1;
+            border-radius: 25px;
+            animation: twinkle 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+            margin: 0;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            color: white;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .live-dot {
+            width: 12px;
+            height: 12px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 107, 107, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.active {
+            background: rgba(255, 107, 107, 0.5);
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .fullscreen-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .map-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .world-map {
+            width: 100%;
+            height: 500px;
+            background:
+                radial-gradient(ellipse at center, rgba(255, 107, 107, 0.05) 0%, transparent 70%),
+                linear-gradient(45deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                inset 0 0 50px rgba(0, 0, 0, 0.7),
+                inset 0 0 20px rgba(255, 107, 107, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 107, 107, 0.1);
+        }
+
+        .world-map::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 25% 30%, rgba(255, 107, 107, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 75% 70%, rgba(139, 0, 0, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.01) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        .country {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            z-index: 1;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            padding: 2px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            hyphens: auto;
+            line-height: 1.2;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .country:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            white-space: normal;
+        }
+
+        .country.updating {
+            animation: updatePulse 1s ease-in-out;
+        }
+
+        @keyframes updatePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+            }
+        }
+
+        /* Density colors - Red gradient */
+        .density-very-high {
+            background: #8B0000;
+            color: white;
+        }
+
+        .density-high {
+            background: #CD5C5C;
+            color: white;
+        }
+
+        .density-medium {
+            background: #F08080;
+            color: black;
+        }
+
+        .density-low {
+            background: #FFB6C1;
+            color: black;
+        }
+
+        .density-very-low {
+            background: #FFF0F5;
+            color: black;
+        }
+
+        .density-none {
+            background: #2F2F2F;
+            color: #888;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            transition: all 0.5s ease;
+        }
+
+        .stat-number.updating {
+            animation: numberUpdate 0.5s ease-in-out;
+        }
+
+        @keyframes numberUpdate {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                color: #ffff00;
+            }
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            border: 1px solid #ff6b6b;
+        }
+
+        .last-updated {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .change-indicator {
+            font-size: 8px;
+            margin-left: 5px;
+            display: inline-block;
+        }
+
+        .change-up {
+            color: #00ff00;
+        }
+
+        .change-down {
+            color: #ff4444;
+        }
+
+        .change-neutral {
+            color: #ffff00;
+        }
+
+        .disclaimer {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Fullscreen styles */
+        .fullscreen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95vw;
+            height: 95vh;
+            z-index: 9999;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 140, 140, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f1419 75%, #000000 100%);
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 25px;
+            margin: 0;
+        }
+
+        .fullscreen .container {
+            max-width: none;
+            height: auto;
+            min-height: calc(100vh - 40px);
+            margin: 0;
+            border-radius: 0;
+            padding: 20px;
+            box-shadow: none;
+            background: transparent;
+            overflow: visible;
+        }
+
+        .fullscreen .world-map {
+            height: 70vh;
+        }
+
+        @media (max-width: 768px) {
+            .fullscreen .world-map {
+                height: 60vh;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            h1 {
+                font-size: 2em;
+                text-align: center;
+            }
+
+            .controls {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .legend {
+                gap: 10px;
+            }
+
+            .legend-item {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <h1>🌍 Live Global Billionaire Density Map</h1>
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span>LIVE DATA</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn active" onclick="setUpdateSpeed(3000)">Real-time (3s)</button>
+            <button class="control-btn" onclick="setUpdateSpeed(10000)">Slow (10s)</button>
+            <button class="control-btn" onclick="setUpdateSpeed(30000)">Very Slow (30s)</button>
+            <button class="control-btn" onclick="toggleUpdates()">⏸️ Pause</button>
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">🔍 Fullscreen</button>
+        </div>
+
+        <div class="map-container">
+            <div class="world-map" id="worldMap">
+                <!-- Countries will be populated by JavaScript -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8B0000;"></div>
+                    <span>Very High (2.0+ per million)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #CD5C5C;"></div>
+                    <span>High (1.0-2.0 per million)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #F08080;"></div>
+                    <span>Medium (0.5-1.0 per million)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FFB6C1;"></div>
+                    <span>Low (0.1-0.5 per million)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FFF0F5;"></div>
+                    <span>Very Low (0.01-0.1 per million)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2F2F2F;"></div>
+                    <span>None (0 billionaires)</span>
+                </div>
+            </div>
+
+            <div class="last-updated" id="lastUpdated">
+                Last updated: Never
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalBillionaires">2,640</div>
+                <div>Total Global Billionaires</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalWealth">$8.7T</div>
+                <div>Combined Net Worth</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="usBillionaires">735</div>
+                <div>US Billionaires</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="highestDensity">4.7</div>
+                <div>Highest Density</div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>⚠️ SIMULATION NOTICE:</strong> This visualization uses simulated data for demonstration purposes
+            only.
+            The billionaire counts, wealth figures, and density calculations are fictional and do not represent
+            real-world statistics.
+            Data updates are generated randomly to showcase the interactive features of the map.
+        </div>
+
+        <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <script>
+        // Initial country data with individual net worth estimates
+        const initialCountries = [
+            { name: "United States", billionaires: 735, position: { left: 15, top: 25, width: 8, height: 12 }, population: 331, avgWealth: 6.8 },
+            { name: "China", billionaires: 495, position: { left: 70, top: 35, width: 6, height: 10 }, population: 1412, avgWealth: 3.2 },
+            { name: "Germany", billionaires: 126, position: { left: 45, top: 20, width: 4, height: 8 }, population: 83, avgWealth: 4.5 },
+            { name: "India", billionaires: 169, position: { left: 75, top: 45, width: 5, height: 8 }, population: 1380, avgWealth: 3.8 },
+            { name: "United Kingdom", billionaires: 52, position: { left: 42, top: 15, width: 3, height: 6 }, population: 67, avgWealth: 5.5 },
+            { name: "France", billionaires: 42, position: { left: 44, top: 25, width: 3, height: 6 }, population: 68, avgWealth: 5.2 },
+            { name: "Italy", billionaires: 35, position: { left: 48, top: 28, width: 2.5, height: 5 }, population: 60, avgWealth: 4.8 },
+            { name: "Brazil", billionaires: 51, position: { left: 18, top: 45, width: 6, height: 8 }, population: 215, avgWealth: 3.5 },
+            { name: "Canada", billionaires: 44, position: { left: 25, top: 15, width: 5, height: 7 }, population: 38, avgWealth: 5.1 },
+            { name: "Japan", billionaires: 40, position: { left: 80, top: 25, width: 4, height: 6 }, population: 125, avgWealth: 4.2 },
+            { name: "Australia", billionaires: 47, position: { left: 85, top: 55, width: 4, height: 6 }, population: 26, avgWealth: 4.9 },
+            { name: "Switzerland", billionaires: 41, position: { left: 50, top: 15, width: 2, height: 4 }, population: 9, avgWealth: 7.1 },
+            { name: "Russia", billionaires: 83, position: { left: 65, top: 20, width: 4, height: 6 }, population: 146, avgWealth: 3.9 },
+            { name: "South Korea", billionaires: 30, position: { left: 82, top: 40, width: 3, height: 5 }, population: 52, avgWealth: 4.4 },
+            { name: "Singapore", billionaires: 26, position: { left: 85, top: 35, width: 2, height: 4 }, population: 6, avgWealth: 6.2 },
+            { name: "Sweden", billionaires: 24, position: { left: 52, top: 18, width: 2.5, height: 4 }, population: 10, avgWealth: 5.6 },
+            { name: "Taiwan", billionaires: 50, position: { left: 75, top: 15, width: 2, height: 4 }, population: 24, avgWealth: 3.6 },
+            { name: "Israel", billionaires: 21, position: { left: 48, top: 35, width: 2.5, height: 4 }, population: 9, avgWealth: 5.1 },
+            { name: "UAE", billionaires: 22, position: { left: 60, top: 35, width: 3, height: 5 }, population: 10, avgWealth: 6.0 },
+            { name: "Turkey", billionaires: 26, position: { left: 55, top: 25, width: 3, height: 5 }, population: 84, avgWealth: 3.2 },
+            { name: "Nigeria", billionaires: 5, position: { left: 38, top: 48, width: 3, height: 5 }, population: 218, avgWealth: 2.9 }
+        ];
+
+        let countries = JSON.parse(JSON.stringify(initialCountries));
+        let updateInterval;
+        let updateSpeed = 3000;
+        let isUpdating = true;
+        let isFullscreen = false;
+
+        function calculateDensity(billionaires, population) {
+            return (billionaires / population).toFixed(2);
+        }
+
+        function getDensityClass(density) {
+            if (density >= 2.0) return 'density-very-high';
+            if (density >= 1.0) return 'density-high';
+            if (density >= 0.5) return 'density-medium';
+            if (density >= 0.1) return 'density-low';
+            if (density > 0) return 'density-very-low';
+            return 'density-none';
+        }
+
+        function createCountryElement(country) {
+            const density = calculateDensity(country.billionaires, country.population);
+            const element = document.createElement('div');
+            element.className = `country ${getDensityClass(density)}`;
+            element.style.left = country.position.left + '%';
+            element.style.top = country.position.top + '%';
+            element.style.width = country.position.width + '%';
+            element.style.height = country.position.height + '%';
+            element.dataset.country = country.name;
+            element.dataset.billionaires = country.billionaires;
+            element.dataset.density = density;
+            element.dataset.population = country.population;
+
+            const shortName = country.name.length > 8 ? country.name.substring(0, 6) + '...' : country.name;
+            element.innerHTML = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                <div style="font-size: 8px; margin-bottom: 1px;">${shortName}</div>
+                <div style="font-size: 9px; font-weight: bold;">${country.billionaires}<span class="change-indicator" id="change-${country.name.replace(/\s/g, '')}"></span></div>
+            </div>`;
+
+            return element;
+        }
+
+        function renderMap() {
+            const worldMap = document.getElementById('worldMap');
+            worldMap.innerHTML = '';
+
+            countries.forEach(country => {
+                const element = createCountryElement(country);
+                worldMap.appendChild(element);
+            });
+
+            setupTooltips();
+        }
+
+        function setupTooltips() {
+            const tooltip = document.getElementById('tooltip');
+            const countryElements = document.querySelectorAll('.country');
+
+            countryElements.forEach(country => {
+                country.addEventListener('mouseenter', (e) => {
+                    const countryName = e.target.dataset.country;
+                    const billionaires = e.target.dataset.billionaires;
+                    const density = e.target.dataset.density;
+                    const population = e.target.dataset.population;
+
+                    tooltip.innerHTML = `
+                        <strong>${countryName}</strong><br>
+                        Billionaires: ${billionaires}<br>
+                        Population: ${population}M<br>
+                        Density: ${density} per million people<br>
+                        <small>Updates every ${updateSpeed / 1000}s</small>
+                    `;
+                    tooltip.style.display = 'block';
+                });
+
+                country.addEventListener('mousemove', (e) => {
+                    tooltip.style.left = (e.pageX + 10) + 'px';
+                    tooltip.style.top = (e.pageY - 10) + 'px';
+                });
+
+                country.addEventListener('mouseleave', () => {
+                    tooltip.style.display = 'none';
+                });
+            });
+        }
+
+        function simulateDataUpdate() {
+            if (!isUpdating) return;
+
+            countries.forEach(country => {
+                const oldCount = country.billionaires;
+
+                // Simulate realistic changes (-3 to +3 billionaires)
+                const change = Math.floor(Math.random() * 7) - 3;
+                const newCount = Math.max(0, country.billionaires + change);
+
+                if (newCount !== oldCount) {
+                    country.billionaires = newCount;
+
+                    // Add visual feedback for changes
+                    const element = document.querySelector(`[data-country="${country.name}"]`);
+                    if (element) {
+                        element.classList.add('updating');
+                        setTimeout(() => element.classList.remove('updating'), 1000);
+
+                        // Update change indicator
+                        const changeIndicator = document.getElementById(`change-${country.name.replace(/\s/g, '')}`);
+                        if (changeIndicator) {
+                            if (change > 0) {
+                                changeIndicator.textContent = `+${change}`;
+                                changeIndicator.className = 'change-indicator change-up';
+                            } else if (change < 0) {
+                                changeIndicator.textContent = `${change}`;
+                                changeIndicator.className = 'change-indicator change-down';
+                            }
+
+                            // Clear indicator after 2 seconds
+                            setTimeout(() => {
+                                changeIndicator.textContent = '';
+                                changeIndicator.className = 'change-indicator';
+                            }, 2000);
+                        }
+                    }
+                }
+            });
+
+            updateGlobalStats();
+            renderMap();
+            updateLastUpdated();
+        }
+
+        function updateGlobalStats() {
+            const totalBillionaires = countries.reduce((sum, country) => sum + country.billionaires, 0);
+
+            // Calculate total wealth more accurately using country-specific averages
+            const totalWealth = countries.reduce((sum, country) => {
+                const countryData = initialCountries.find(c => c.name === country.name);
+                return sum + (country.billionaires * (countryData?.avgWealth || 3.3));
+            }, 0);
+
+            const usBillionaires = countries.find(c => c.name === "United States")?.billionaires || 0;
+            const highestDensity = Math.max(...countries.map(c => calculateDensity(c.billionaires, c.population)));
+
+            // Animate number changes
+            const elements = {
+                totalBillionaires: document.getElementById('totalBillionaires'),
+                totalWealth: document.getElementById('totalWealth'),
+                usBillionaires: document.getElementById('usBillionaires'),
+                highestDensity: document.getElementById('highestDensity')
+            };
+
+            if (elements.totalBillionaires) {
+                elements.totalBillionaires.classList.add('updating');
+                elements.totalBillionaires.textContent = totalBillionaires.toLocaleString();
+                setTimeout(() => elements.totalBillionaires.classList.remove('updating'), 500);
+            }
+
+            if (elements.totalWealth) {
+                elements.totalWealth.classList.add('updating');
+                elements.totalWealth.textContent = '$' + (totalWealth / 1000).toFixed(1) + 'T';
+                setTimeout(() => elements.totalWealth.classList.remove('updating'), 500);
+            }
+
+            if (elements.usBillionaires) {
+                elements.usBillionaires.classList.add('updating');
+                elements.usBillionaires.textContent = usBillionaires;
+                setTimeout(() => elements.usBillionaires.classList.remove('updating'), 500);
+            }
+
+            if (elements.highestDensity) {
+                elements.highestDensity.classList.add('updating');
+                elements.highestDensity.textContent = highestDensity;
+                setTimeout(() => elements.highestDensity.classList.remove('updating'), 500);
+            }
+        }
+
+        function updateLastUpdated() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            if (lastUpdatedElement) {
+                lastUpdatedElement.textContent = `Last updated: ${timeString}`;
+            }
+        }
+
+        function setUpdateSpeed(speed) {
+            updateSpeed = speed;
+
+            // Update button states
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Restart interval with new speed
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+
+            if (isUpdating) {
+                updateInterval = setInterval(simulateDataUpdate, updateSpeed);
+            }
+        }
+
+        function toggleUpdates() {
+            isUpdating = !isUpdating;
+            const pauseBtn = document.querySelector('.control-btn:nth-child(4)');
+
+            if (isUpdating) {
+                pauseBtn.textContent = '⏸️ Pause';
+                pauseBtn.classList.remove('active');
+                updateInterval = setInterval(simulateDataUpdate, updateSpeed);
+            } else {
+                pauseBtn.textContent = '▶️ Resume';
+                pauseBtn.classList.add('active');
+                clearInterval(updateInterval);
+            }
+        }
+
+        function toggleFullscreen() {
+            const container = document.getElementById('mainContainer');
+            const fullscreenBtn = document.querySelector('.fullscreen-btn');
+
+            if (!isFullscreen) {
+                container.classList.add('fullscreen');
+                fullscreenBtn.textContent = '🔍 Exit Fullscreen';
+                isFullscreen = true;
+            } else {
+                container.classList.remove('fullscreen');
+                fullscreenBtn.textContent = '🔍 Fullscreen';
+                isFullscreen = false;
+            }
+        }
+
+        // Handle ESC key for fullscreen exit
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isFullscreen) {
+                toggleFullscreen();
+            }
+        });
+
+        // Initialize the map
+        function init() {
+            renderMap();
+            updateGlobalStats();
+            updateLastUpdated();
+
+            // Start the update interval
+            updateInterval = setInterval(simulateDataUpdate, updateSpeed);
+        }
+
+        // Start when page loads
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Handle window resize for responsive design
+        window.addEventListener('resize', () => {
+            // Redraw tooltips on resize
+            setupTooltips();
+        });
+
+        // Add some additional interactive features
+        function addKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case '1':
+                        setUpdateSpeed(3000);
+                        break;
+                    case '2':
+                        setUpdateSpeed(10000);
+                        break;
+                    case '3':
+                        setUpdateSpeed(30000);
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        toggleUpdates();
+                        break;
+                    case 'f':
+                    case 'F':
+                        toggleFullscreen();
+                        break;
+                }
+            });
+        }
+
+        // Initialize keyboard shortcuts
+        addKeyboardShortcuts();
+
+        // Add click handler for countries to show detailed info
+        function showCountryDetails(countryName) {
+            const country = countries.find(c => c.name === countryName);
+            if (!country) return;
+
+            const density = calculateDensity(country.billionaires, country.population);
+            const countryData = initialCountries.find(c => c.name === countryName);
+            const totalWealth = country.billionaires * (countryData?.avgWealth || 3.3);
+
+            alert(`${countryName} Details:\n\n` +
+                `Billionaires: ${country.billionaires}\n` +
+                `Population: ${country.population} million\n` +
+                `Density: ${density} per million people\n` +
+                `Estimated Total Wealth: $${totalWealth.toFixed(1)}B\n` +
+                `Average Wealth per Billionaire: $${(countryData?.avgWealth || 3.3).toFixed(1)}B`);
+        }
+
+        // Enhanced tooltip with more information
+        function setupEnhancedTooltips() {
+            const tooltip = document.getElementById('tooltip');
+            const countryElements = document.querySelectorAll('.country');
+
+            countryElements.forEach(country => {
+                country.addEventListener('click', (e) => {
+                    const countryName = e.target.dataset.country;
+                    showCountryDetails(countryName);
+                });
+            });
+        }
+
+        // Performance optimization: debounce resize events
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Optimized resize handler
+        const debouncedResize = debounce(() => {
+            renderMap();
+            setupTooltips();
+        }, 250);
+
+        window.addEventListener('resize', debouncedResize);
+
+        // Add data export functionality
+        function exportData() {
+            const dataToExport = {
+                timestamp: new Date().toISOString(),
+                countries: countries.map(country => ({
+                    name: country.name,
+                    billionaires: country.billionaires,
+                    population: country.population,
+                    density: calculateDensity(country.billionaires, country.population)
+                })),
+                globalStats: {
+                    totalBillionaires: countries.reduce((sum, country) => sum + country.billionaires, 0),
+                    totalWealth: countries.reduce((sum, country) => {
+                        const countryData = initialCountries.find(c => c.name === country.name);
+                        return sum + (country.billionaires * (countryData?.avgWealth || 3.3));
+                    }, 0)
+                }
+            };
+
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `billionaire-data-${new Date().toISOString().slice(0, 10)}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Add export button (you can add this to HTML if needed)
+        function addExportButton() {
+            const controls = document.querySelector('.controls');
+            const exportBtn = document.createElement('button');
+            exportBtn.className = 'control-btn';
+            exportBtn.textContent = '📊 Export Data';
+            exportBtn.onclick = exportData;
+            controls.appendChild(exportBtn);
+        }
+
+        // Initialize export functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            addExportButton();
+        });
+
+        // Add some fun easter eggs
+        let clickCount = 0;
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'H1') {
+                clickCount++;
+                if (clickCount === 5) {
+                    alert('🎉 You found the easter egg! This simulation updates every few seconds with realistic billionaire count changes.');
+                    clickCount = 0;
+                }
+            }
+        });
+
+        // Console welcome message
+        console.log('%c🌍 Welcome to the Live Global Billionaire Density Map!', 'color: #ff6b6b; font-size: 16px; font-weight: bold;');
+        console.log('%cKeyboard shortcuts:\n1, 2, 3 - Change update speed\nSpacebar - Pause/Resume\nF - Toggle fullscreen\nESC - Exit fullscreen', 'color: #888; font-size: 12px;');
+    </script>
+</body>
+
+</html>
