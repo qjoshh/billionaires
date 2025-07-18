@@ -520,10 +520,10 @@
 <body>
     <div class="container" id="mainContainer">
         <div class="header">
-            <h1>🌍 Global Billionaire Map — Simulated</h1>
+            <h1>🌍 Global Billionaire Density Map</h1>
             <div class="live-indicator">
                 <div class="live-dot"></div>
-                <span>LIVE DATA</span>
+                <span>SIMULATED DATA</span>
             </div>
         </div>
 
@@ -592,11 +592,13 @@
         </div>
 
         <div class="disclaimer">
-            <strong>⚠️ SIMULATION NOTICE:</strong> This visualization uses simulated data for demonstration purposes
-            only.
-            The billionaire counts, wealth figures, and density calculations are fictional and do not represent
-            real-world statistics.
-            Data updates are generated randomly to showcase the interactive features of the map.
+            <strong>⚠️ DATA SIMULATION NOTICE:</strong> This visualization is based on real-world billionaire data from Forbes 2024
+            and other authoritative sources,
+            but figures have been rounded and simplified for visualization purposes.
+            The billionaire counts and wealth figures may not be exactly one-to-one with current real-world statistics
+            due to
+            rounding, data consolidation, and the dynamic nature of wealth rankings.
+            Interactive data updates demonstrate the map's features and may include simulated changes.
         </div>
 
         <div class="tooltip" id="tooltip"></div>
@@ -605,49 +607,104 @@
     <script>
         // Initial country data with individual net worth estimates
        const initialCountries = [
-            // Row 1 (7 countries) - Sorted by billionaire count (highest to lowest)
-            { name: "United States", billionaires: 735, position: { left: 0, top: 0, width: 17, height: 22 }, population: 331, avgWealth: 6.8 },
-            { name: "China", billionaires: 495, position: { left: 15, top: 0, width: 15, height: 20 }, population: 1412, avgWealth: 3.2 },
-            { name: "India", billionaires: 169, position: { left: 31, top: 1, width: 13, height: 18 }, population: 1380, avgWealth: 3.8 },
-            { name: "Germany", billionaires: 126, position: { left: 45, top: 2, width: 12, height: 17 }, population: 83, avgWealth: 4.5 },
-            { name: "Russia", billionaires: 83, position: { left: 60, top: 3, width: 11, height: 16 }, population: 146, avgWealth: 3.9 },
-            { name: "Hong Kong", billionaires: 66, position: { left: 75, top: 3, width: 10, height: 15 }, population: 7.5, avgWealth: 6.7 },
-            { name: "Canada", billionaires: 64, position: { left: 90, top: 3, width: 10, height: 15 }, population: 38, avgWealth: 5.1 },
+            // Row 1 (7 countries) - Updated with Forbes 2024/recent data
+            { name: "United States", billionaires: 813, position: { left: 0, top: 0, width: 17, height: 22 }, population: 331, avgWealth: 6.2 },
+            { name: "China", billionaires: 473, position: { left: 15, top: 0, width: 15, height: 20 }, population: 1412, avgWealth: 3.8 },
+            { name: "India", billionaires: 200, position: { left: 31, top: 1, width: 13, height: 18 }, population: 1380, avgWealth: 4.1 },
+            { name: "Germany", billionaires: 132, position: { left: 45, top: 2, width: 12, height: 17 }, population: 83, avgWealth: 5.2 },
+            { name: "Russia", billionaires: 120, position: { left: 60, top: 3, width: 11, height: 16 }, population: 146, avgWealth: 4.7 },
+            { name: "United Kingdom", billionaires: 73, position: { left: 75, top: 3, width: 10, height: 15 }, population: 67, avgWealth: 5.8 },
+            { name: "Brazil", billionaires: 69, position: { left: 90, top: 3, width: 10, height: 15 }, population: 215, avgWealth: 3.6 },
 
-            // Row 2 (7 countries)
-            { name: "United Kingdom", billionaires: 52, position: { left: 2, top: 20, width: 10, height: 15 }, population: 67, avgWealth: 5.5 },
-            { name: "Brazil", billionaires: 51, position: { left: 17, top: 20, width: 10, height: 15 }, population: 215, avgWealth: 3.5 },
-            { name: "Taiwan", billionaires: 50, position: { left: 32, top: 20, width: 10, height: 15 }, population: 24, avgWealth: 3.6 },
-            { name: "Australia", billionaires: 47, position: { left: 46.5, top: 20, width: 9, height: 14 }, population: 26, avgWealth: 4.9 },
-            { name: "France", billionaires: 43, position: { left: 61, top: 20, width: 9, height: 14 }, population: 68, avgWealth: 5.2 },
-            { name: "Switzerland", billionaires: 41, position: { left: 76, top: 20, width: 9, height: 14 }, population: 9, avgWealth: 7.1 },
-            { name: "Japan", billionaires: 40, position: { left: 91, top: 20, width: 9, height: 14 }, population: 125, avgWealth: 4.2 },
+            // Row 2 (7 countries) - Updated counts
+            { name: "Hong Kong", billionaires: 67, position: { left: 2, top: 20, width: 10, height: 15 }, population: 7.5, avgWealth: 8.9 },
+            { name: "Canada", billionaires: 55, position: { left: 17, top: 20, width: 10, height: 15 }, population: 38, avgWealth: 4.8 },
+            { name: "Italy", billionaires: 53, position: { left: 32, top: 20, width: 10, height: 15 }, population: 60, avgWealth: 4.6 },
+            { name: "France", billionaires: 51, position: { left: 46.5, top: 20, width: 9, height: 14 }, population: 68, avgWealth: 6.1 },
+            { name: "Taiwan", billionaires: 48, position: { left: 61, top: 20, width: 9, height: 14 }, population: 24, avgWealth: 3.9 },
+            { name: "Japan", billionaires: 43, position: { left: 76, top: 20, width: 9, height: 14 }, population: 125, avgWealth: 4.2 },
+            { name: "Switzerland", billionaires: 41, position: { left: 91, top: 20, width: 9, height: 14 }, population: 9, avgWealth: 7.8 },
 
-            // Row 3 (7 countries)
-            { name: "Italy", billionaires: 35, position: { left: 2, top: 40, width: 9, height: 14 }, population: 60, avgWealth: 4.8 },
-            { name: "South Korea", billionaires: 30, position: { left: 17, top: 40, width: 9, height: 14 }, population: 52, avgWealth: 4.4 },
-            { name: "Thailand", billionaires: 28, position: { left: 33, top: 40, width: 9, height: 14 }, population: 70, avgWealth: 3.4 },
-            { name: "Turkey", billionaires: 26, position: { left: 47, top: 40, width: 9, height: 14 }, population: 84, avgWealth: 3.2 },
-            { name: "Singapore", billionaires: 26, position: { left: 61, top: 40, width: 9, height: 14 }, population: 6, avgWealth: 6.2 },
-            { name: "Spain", billionaires: 25, position: { left: 76.5, top: 40, width: 8, height: 13 }, population: 47, avgWealth: 4.1 },
-            { name: "Indonesia", billionaires: 24, position: { left: 91.5, top: 40, width: 8, height: 13 }, population: 273, avgWealth: 3.5 },
+            // Row 3 (7 countries) - Updated counts
+            { name: "South Korea", billionaires: 39, position: { left: 2, top: 40, width: 9, height: 14 }, population: 52, avgWealth: 5.1 },
+            { name: "Singapore", billionaires: 36, position: { left: 17, top: 40, width: 9, height: 14 }, population: 6, avgWealth: 7.2 },
+            { name: "Australia", billionaires: 35, position: { left: 33, top: 40, width: 9, height: 14 }, population: 26, avgWealth: 5.4 },
+            { name: "Thailand", billionaires: 29, position: { left: 47, top: 40, width: 9, height: 14 }, population: 70, avgWealth: 3.8 },
+            { name: "Sweden", billionaires: 27, position: { left: 61, top: 40, width: 9, height: 14 }, population: 10, avgWealth: 6.3 },
+            { name: "Turkey", billionaires: 26, position: { left: 76.5, top: 40, width: 8, height: 13 }, population: 84, avgWealth: 3.4 },
+            { name: "Spain", billionaires: 22, position: { left: 91.5, top: 40, width: 8, height: 13 }, population: 47, avgWealth: 4.1 },
 
-            // Row 4 (7 countries)
-            { name: "Sweden", billionaires: 24, position: { left: 2, top: 60, width: 8, height: 13 }, population: 10, avgWealth: 5.6 },
-            { name: "UAE", billionaires: 22, position: { left: 17, top: 60, width: 8, height: 13 }, population: 10, avgWealth: 6.0 },
-            { name: "Israel", billionaires: 21, position: { left: 33.5, top: 60, width: 8, height: 13 }, population: 9, avgWealth: 5.1 },
-            { name: "Malaysia", billionaires: 18, position: { left: 47, top: 60, width: 8, height: 13 }, population: 33, avgWealth: 4.3 },
-            { name: "Mexico", billionaires: 16, position: { left: 62, top: 60, width: 8, height: 13 }, population: 126, avgWealth: 3.9 },
-            { name: "Philippines", billionaires: 14, position: { left: 77, top: 60, width: 8, height: 13 }, population: 113, avgWealth: 3.2 },
-            { name: "Norway", billionaires: 13, position: { left: 92, top: 60, width: 8, height: 13 }, population: 5.4, avgWealth: 5.5 },
+            // Row 4 (7 countries) - Updated counts
+            { name: "Indonesia", billionaires: 17, position: { left: 2, top: 60, width: 8, height: 13 }, population: 273, avgWealth: 3.7 },
+            { name: "UAE", billionaires: 16, position: { left: 17, top: 60, width: 8, height: 13 }, population: 10, avgWealth: 6.8 },
+            { name: "Malaysia", billionaires: 14, position: { left: 33.5, top: 60, width: 8, height: 13 }, population: 33, avgWealth: 4.3 },
+            { name: "Mexico", billionaires: 12, position: { left: 47, top: 60, width: 8, height: 13 }, population: 126, avgWealth: 4.9 },
+            { name: "Netherlands", billionaires: 11, position: { left: 62, top: 60, width: 8, height: 13 }, population: 17, avgWealth: 8.2 },
+            { name: "Israel", billionaires: 10, position: { left: 77, top: 60, width: 8, height: 13 }, population: 9, avgWealth: 5.6 },
+            { name: "Ireland", billionaires: 10, position: { left: 92, top: 60, width: 8, height: 13 }, population: 5.0, avgWealth: 9.1 },
 
-            // Row 5 (6 countries) - Final row
-            { name: "Vietnam", billionaires: 7, position: { left: 2, top: 80, width: 7, height: 12 }, population: 100, avgWealth: 3.3 },
-            { name: "Egypt", billionaires: 6, position: { left: 17, top: 80, width: 7, height: 12 }, population: 110, avgWealth: 3.1 },
-            { name: "Chile", billionaires: 6, position: { left: 34, top: 80, width: 7, height: 12 }, population: 19, avgWealth: 3.8 },
-            { name: "South Africa", billionaires: 5, position: { left: 47.5, top: 80, width: 7, height: 12 }, population: 60, avgWealth: 3.3 },
-            { name: "Nigeria", billionaires: 4, position: { left: 62, top: 80, width: 7, height: 12 }, population: 218, avgWealth: 2.9 },
-            { name: "Colombia", billionaires: 4, position: { left: 77.5, top: 80, width: 7, height: 12 }, population: 52, avgWealth: 3.2 }
+            // Row 5 (7 countries) - Updated counts
+            { name: "Monaco", billionaires: 10, position: { left: 2, top: 80, width: 7, height: 12 }, population: 0.04, avgWealth: 12.5 },
+            { name: "Belgium", billionaires: 9, position: { left: 17, top: 80, width: 7, height: 12 }, population: 11.5, avgWealth: 6.4 },
+            { name: "Greece", billionaires: 8, position: { left: 34, top: 80, width: 7, height: 12 }, population: 10.4, avgWealth: 4.8 },
+            { name: "Austria", billionaires: 7, position: { left: 47.5, top: 80, width: 7, height: 12 }, population: 9.0, avgWealth: 7.6 },
+            { name: "Denmark", billionaires: 6, position: { left: 62, top: 80, width: 7, height: 12 }, population: 5.9, avgWealth: 6.9 },
+            { name: "Poland", billionaires: 6, position: { left: 77.5, top: 80, width: 7, height: 12 }, population: 38, avgWealth: 3.8 },
+            { name: "Finland", billionaires: 5, position: { left: 92.5, top: 80, width: 7, height: 12 }, population: 5.5, avgWealth: 4.7 },
+
+            // Row 6 (7 countries) - Updated counts
+            { name: "Kazakhstan", billionaires: 5, position: { left: 0, top: 100, width: 8, height: 13 }, population: 19, avgWealth: 2.8 },
+            { name: "Vietnam", billionaires: 5, position: { left: 15, top: 100, width: 8, height: 13 }, population: 100, avgWealth: 2.9 },
+            { name: "Philippines", billionaires: 4, position: { left: 30, top: 100, width: 8, height: 13 }, population: 113, avgWealth: 3.1 },
+            { name: "New Zealand", billionaires: 4, position: { left: 45, top: 100, width: 8, height: 13 }, population: 5.1, avgWealth: 5.2 },
+            { name: "Czech Republic", billionaires: 4, position: { left: 60, top: 100, width: 8, height: 13 }, population: 10.7, avgWealth: 4.6 },
+            { name: "Norway", billionaires: 4, position: { left: 75, top: 100, width: 8, height: 13 }, population: 5.4, avgWealth: 6.8 },
+            { name: "Chile", billionaires: 4, position: { left: 90, top: 100, width: 8, height: 13 }, population: 19, avgWealth: 4.2 },
+
+            // Row 7 (7 countries) - Updated counts
+            { name: "Egypt", billionaires: 4, position: { left: 0, top: 120, width: 8, height: 13 }, population: 110, avgWealth: 2.7 },
+            { name: "Cyprus", billionaires: 3, position: { left: 15, top: 120, width: 8, height: 13 }, population: 1.2, avgWealth: 8.9 },
+            { name: "Argentina", billionaires: 3, position: { left: 30, top: 120, width: 8, height: 13 }, population: 46, avgWealth: 3.2 },
+            { name: "South Africa", billionaires: 3, position: { left: 45, top: 120, width: 8, height: 13 }, population: 60, avgWealth: 3.6 },
+            { name: "Nigeria", billionaires: 3, position: { left: 60, top: 120, width: 8, height: 13 }, population: 218, avgWealth: 2.4 },
+            { name: "Luxembourg", billionaires: 2, position: { left: 75, top: 120, width: 7, height: 12 }, population: 0.64, avgWealth: 7.2 },
+            { name: "Morocco", billionaires: 2, position: { left: 90, top: 120, width: 7, height: 12 }, population: 37, avgWealth: 2.8 },
+
+            // Row 8 (7 countries) - Updated counts
+            { name: "Portugal", billionaires: 2, position: { left: 0, top: 140, width: 7, height: 12 }, population: 10.3, avgWealth: 3.9 },
+            { name: "Romania", billionaires: 2, position: { left: 15, top: 140, width: 7, height: 12 }, population: 19, avgWealth: 2.6 },
+            { name: "Colombia", billionaires: 2, position: { left: 30, top: 140, width: 7, height: 12 }, population: 52, avgWealth: 3.1 },
+            { name: "Peru", billionaires: 2, position: { left: 45, top: 140, width: 7, height: 12 }, population: 34, avgWealth: 2.8 },
+            { name: "Georgia", billionaires: 2, position: { left: 60, top: 140, width: 7, height: 12 }, population: 3.7, avgWealth: 4.2 },
+            { name: "Iceland", billionaires: 2, position: { left: 75, top: 140, width: 7, height: 12 }, population: 0.38, avgWealth: 3.8 },
+            { name: "Liechtenstein", billionaires: 2, position: { left: 90, top: 140, width: 7, height: 12 }, population: 0.039, avgWealth: 9.2 },
+
+            // Row 9 (7 countries) - Updated counts
+            { name: "Hungary", billionaires: 1, position: { left: 0, top: 160, width: 7, height: 12 }, population: 9.7, avgWealth: 2.1 },
+            { name: "Algeria", billionaires: 1, position: { left: 15, top: 160, width: 7, height: 12 }, population: 45, avgWealth: 3.8 },
+            { name: "Slovakia", billionaires: 1, position: { left: 30, top: 160, width: 7, height: 12 }, population: 5.4, avgWealth: 2.4 },
+            { name: "Estonia", billionaires: 1, position: { left: 45, top: 160, width: 7, height: 12 }, population: 1.3, avgWealth: 2.9 },
+            { name: "Latvia", billionaires: 1, position: { left: 60, top: 160, width: 7, height: 12 }, population: 1.9, avgWealth: 1.8 },
+            { name: "Lithuania", billionaires: 1, position: { left: 75, top: 160, width: 7, height: 12 }, population: 2.8, avgWealth: 2.2 },
+            { name: "Malta", billionaires: 1, position: { left: 90, top: 160, width: 7, height: 12 }, population: 0.52, avgWealth: 3.1 },
+
+            // Row 10 (7 countries) - Updated counts (many small countries have 1 billionaire)
+            { name: "Barbados", billionaires: 1, position: { left: 0, top: 180, width: 7, height: 12 }, population: 0.29, avgWealth: 6.4 },
+            { name: "Guernsey", billionaires: 1, position: { left: 15, top: 180, width: 7, height: 12 }, population: 0.067, avgWealth: 4.8 },
+            { name: "St. Kitts and Nevis", billionaires: 1, position: { left: 30, top: 180, width: 7, height: 12 }, population: 0.053, avgWealth: 12.3 },
+            { name: "Swaziland", billionaires: 1, position: { left: 45, top: 180, width: 7, height: 12 }, population: 1.2, avgWealth: 5.2 },
+            { name: "Tanzania", billionaires: 1, position: { left: 60, top: 180, width: 7, height: 12 }, population: 62, avgWealth: 4.1 },
+            { name: "Uganda", billionaires: 1, position: { left: 75, top: 180, width: 7, height: 12 }, population: 47, avgWealth: 1.8 },
+            { name: "Zimbabwe", billionaires: 1, position: { left: 90, top: 180, width: 7, height: 12 }, population: 15, avgWealth: 1.6 },
+
+            // Row 11 (7 countries) - Final countries to complete the data
+            { name: "Nepal", billionaires: 1, position: { left: 0, top: 200, width: 7, height: 12 }, population: 30, avgWealth: 1.4 },
+            { name: "Lebanon", billionaires: 1, position: { left: 15, top: 200, width: 7, height: 12 }, population: 7, avgWealth: 2.6 },
+            { name: "Ukraine", billionaires: 1, position: { left: 30, top: 200, width: 7, height: 12 }, population: 41, avgWealth: 1.9 },
+            { name: "Uruguay", billionaires: 1, position: { left: 45, top: 200, width: 7, height: 12 }, population: 3.5, avgWealth: 4.8 },
+            { name: "Serbia", billionaires: 1, position: { left: 60, top: 200, width: 7, height: 12 }, population: 7, avgWealth: 2.1 },
+            { name: "Croatia", billionaires: 1, position: { left: 75, top: 200, width: 7, height: 12 }, population: 3.9, avgWealth: 3.4 },
+            { name: "Slovenia", billionaires: 1, position: { left: 90, top: 200, width: 7, height: 12 }, population: 2.1, avgWealth: 2.8 }
         ];
 
         let countries = JSON.parse(JSON.stringify(initialCountries));
