@@ -327,8 +327,9 @@
         }
 
         .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 20px;
             margin-top: 30px;
         }
@@ -357,6 +358,18 @@
 
         .stat-number.updating {
             animation: numberUpdate 0.5s ease-in-out;
+        }
+        @media (max-width: 768px) {
+
+            .legend-item {
+                flex: 0 0 48%;
+                box-sizing: border-box;
+            }
+
+            .stat-card {
+                max-width: 48%;
+                padding: 14px;
+            }
         }
 
         @keyframes numberUpdate {
